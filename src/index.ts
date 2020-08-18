@@ -1,1 +1,9 @@
-console.log('teste');
+import config from 'config';
+import { SetupServer } from './server';
+
+// Self invocked function
+(async (): Promise<void> => {
+  const server = new SetupServer(config.get('App.port'))
+  await server.init();
+  server.start();
+})();
