@@ -20,8 +20,8 @@ const schema = new mongoose.Schema(
   {
     lat: { type: Number, required: true},
     lng: { type: Number, required: true},
-    name: { type: Number, required: true },
-    position: { type: Number, required: true },
+    name: { type: String, required: true },
+    position: { type: String, required: true },
   }, {
     toJSON: {
       transform: (_, ret): void => {
