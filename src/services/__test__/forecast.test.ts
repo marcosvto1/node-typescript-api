@@ -5,10 +5,12 @@ import { Beach, BeachPosition, Forecast } from './../forecast';
 jest.mock('@src/clients/stormGlass');
 
 describe('Forecast Service', () => {
+
+  const mockedStormGlassService = new StormGlass() as jest.Mocked<StormGlass>;
+
   it('Should return the forecast for a list of beachs', async () => {
-    StormGlass.prototype.fetchPoints = jest
-      .fn()
-      .mockResolvedValue(stormGlassNormalizedWeather3HoursFixture);
+    mockedStormGlassService.fetchPoints
+    .mockResolvedValue(stormGlassNormalizedWeather3HoursFixture);
 
     const beaches: Beach[] = [
       {
