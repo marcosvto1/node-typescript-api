@@ -1,5 +1,4 @@
-import mongoose from 'mongoose';
-
+import mongoose, { Document, Model } from 'mongoose';
 
 export enum BeachPosition {
   S = 'S',
@@ -9,6 +8,7 @@ export enum BeachPosition {
 }
 
 export interface Beach {
+  _id?: string;
   lat: number;
   lng: number;
   name: string;
@@ -31,4 +31,8 @@ const schema = new mongoose.Schema(
       }
     }
   }
-)
+);
+// cria um tipo que inclui as funcões do mongoose para models (save, find) + interface Beach attributts
+interface BeachModel extends Omit<Beach, '_id'>, Document {}
+
+export const Beach: Model<BeachModel> = mongoose.model('Beach', schema);
