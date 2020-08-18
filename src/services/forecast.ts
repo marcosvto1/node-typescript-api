@@ -5,7 +5,7 @@ export enum BeachPosition {
   S = 'S',
   E = 'E',
   W = 'W',
-  N = 'N'
+  N = 'N',
 }
 
 export interface Beach {
@@ -23,8 +23,10 @@ export interface BeachForecast extends Omit<Beach, 'user'>, ForecastPoint {
 export class Forecast {
   constructor(protected stormGlass = new StormGlass()) {}
 
-  public async processForecastForBeaches(beachs: Beach[]): Promise<BeachForecast[]> {
-    const pointWithCorrectSources:  BeachForecast[] = [];
+  public async processForecastForBeaches(
+    beachs: Beach[]
+  ): Promise<BeachForecast[]> {
+    const pointWithCorrectSources: BeachForecast[] = [];
     for (const beach of beachs) {
       const points = await this.stormGlass.fetchPoints(beach.lat, beach.lng);
       const enrichedBeachData = points.map((e) => ({
@@ -33,14 +35,14 @@ export class Forecast {
           lng: beach.lng,
           name: beach.name,
           position: beach.position,
-          rating: 1
+          rating: 1,
         },
-        ...e
+        ...e,
       }));
 
       pointWithCorrectSources.push(...enrichedBeachData);
     }
 
     return pointWithCorrectSources;
-  } 
+  }
 }
