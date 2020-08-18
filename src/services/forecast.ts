@@ -1,7 +1,7 @@
-import { StormGlass } from '@src/clients/stormGlass';
+import { StormGlass } from '../clients/stormGlass';
 import { Beach } from '@src/models/beach';
-import { ForecastPoint } from './../clients/stormGlass';
-import { InternalError } from './../util/errors/internal-error';
+import { ForecastPoint } from '@src/clients/stormGlass';
+import { InternalError } from '@src/util/errors/internal-error';
 
 // Omit extends e omite algo
 export interface BeachForecast extends Omit<Beach, 'user'>, ForecastPoint {
