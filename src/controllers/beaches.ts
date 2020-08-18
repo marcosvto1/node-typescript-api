@@ -1,10 +1,11 @@
+import { BaseController } from '@src/controllers';
 import { Controller, Post } from "@overnightjs/core";
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { Beach } from '@src/models/beach';
 
 @Controller('beaches')
-export class BeachesController {
+export class BeachesController extends BaseController{
   @Post('')
   public async create(req: Request, res: Response): Promise<void> {
     try {
@@ -12,11 +13,7 @@ export class BeachesController {
       const result = await beach.save();
       res.status(201).send(result); // Automaticamente chama o toJSON do model
     } catch (error) {
-      if (error instanceof mongoose.Error.ValidationError) {
-        res.status(422).send({error: error.message});
-      } else {
-        res.status(500).send({error: 'Internal server Error'});
-      }
+      this.sendCreatedUpdatedErrorResponse(res, error);
     }
   }
 }

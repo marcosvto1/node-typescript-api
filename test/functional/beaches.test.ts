@@ -36,6 +36,7 @@ describe('Beaches functional tests', () => {
       expect(response.status).toBe(422);
       // verifica se neste objecto contém o newBeach, pois ainda vai ter id dinamico gerado pelo banco
       expect(response.body).toEqual({
+        code: 422,
         error: 
           'Beach validation failed: lat: Cast to Number failed for value "invalid_string" at path "lat"',
       });
@@ -60,7 +61,8 @@ describe('Beaches functional tests', () => {
 
       expect(response.status).toBe(500);
       expect(response.body).toEqual({
-        error: 'Internal server Error'
+        code: 500,
+        error: 'Something went wrong'
       });
 
     });
