@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "yarn build && node dist/src/index.js",
     "start:dev": "ts-node-dev --transpile-only 'src/index.ts'",
-    "test:functional": "jest --projects ./test --runInBand", 
+    "test:functional": "jest --projects ./test --runInBand",
     "test:unit": "jest",
     "test": "yarn test:unit && yarn test:functional",
     "lint": "eslint ./src ./test --ext .ts",
@@ -45,7 +45,9 @@
   },
   "dependencies": {
     "@overnightjs/core": "^1.7.4",
+    "@types/bcrypt": "^3.0.0",
     "axios": "^0.19.2",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "config": "^3.3.1",
     "express": "^4.17.1",
