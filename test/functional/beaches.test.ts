@@ -1,7 +1,20 @@
+import AuthService from '@src/services/auth';
 import { Beach } from '@src/models/beach';
-describe('Beaches functional tests', () => {
+import { User } from '@src/models/user';
 
-  beforeAll(async () => await Beach.deleteMany({}));
+describe('Beaches functional tests', () => {
+  const defaultUser = {
+    name: 'Jhon Doe',
+    email: 'jhon@mail.com',
+    password: '1234'
+  }
+  let token: string;
+  beforeEach(async () => {
+    await Beach.deleteMany({});
+    await User.deleteMany({})
+    const user = await new User(defaultUser).save();
+    token = AuthService.generateToken(user.toJSON());
+  });
 
   describe('When creating a beach', () => {
     it('should create a beach with success', async () => {
@@ -14,14 +27,14 @@ describe('Beaches functional tests', () => {
 
       const response = await global.testRequest.post(
         '/beaches'
-      ).send(newBeach);
+      ).set({ 'x-access-token': token }).send(newBeach);
 
       expect(response.status).toBe(201);
       // verifica se neste objecto contém o newBeach, pois ainda vai ter id dinamico gerado pelo banco
       expect(response.body).toEqual(expect.objectContaining(newBeach));
     });
 
-    it('should return 422 when there is a validation error', async() => {
+    it('should return 422 when there is a validation error', async () => {
       const newBeach = {
         lat: 'invalid_string',
         lng: 151.289824,
@@ -31,13 +44,13 @@ describe('Beaches functional tests', () => {
 
       const response = await global.testRequest.post(
         '/beaches'
-      ).send(newBeach);
+      ).set({ 'x-access-token': token }).send(newBeach);
 
       expect(response.status).toBe(422);
       // verifica se neste objecto contém o newBeach, pois ainda vai ter id dinamico gerado pelo banco
       expect(response.body).toEqual({
         code: 422,
-        error: 
+        error:
           'Beach validation failed: lat: Cast to Number failed for value "invalid_string" at path "lat"',
       });
     });
@@ -54,10 +67,10 @@ describe('Beaches functional tests', () => {
         name: 'Manly',
         position: 'E'
       };
-  
+
       const response = await global.testRequest.post(
         '/beaches'
-      ).send(newBeach);
+      ).set({ 'x-access-token': token }).send(newBeach);
 
       expect(response.status).toBe(500);
       expect(response.body).toEqual({
@@ -69,5 +82,5 @@ describe('Beaches functional tests', () => {
 
   });
 
-  
+
 }); 
