@@ -91,4 +91,26 @@ describe('User functional tests', () => {
       });
     });
   });
+
+
+  describe('When authenticating a user', () => {
+    it('should generate token for a valid user', async() => {
+      const newUser = {
+        name: 'Jhon Doe',
+        email: 'jhon@mail.com',
+        password: '1234'
+      };
+
+      await new User(newUser).save();
+
+      const response = await global.testRequest
+      .post('/users/authenticate')
+      .send({ email: newUser.email, password: newUser.password });
+
+      expect(response.body).toEqual(
+        expect.objectContaining({token: expect.any(String)})
+      );
+    });
+  });
+
 })
