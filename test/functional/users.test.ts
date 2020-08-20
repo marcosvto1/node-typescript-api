@@ -1,12 +1,16 @@
+
 import { User } from './../../src/models/user';
+import AuthService from '@src/services/auth';
+
+
 describe('User functional tests', () => {
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     await User.deleteMany({});
-  })
+  });
 
   describe('when creating a new user', () => {
-    it('should successfuly create a new user', async () => {
+    it('should successfuly create a new user with encrypted password', async () => {
       const newUser = {
         name: 'Jhon doe',
         email: 'jhon@gmail.com',
@@ -18,37 +22,19 @@ describe('User functional tests', () => {
       ).send(newUser);
 
       expect(response.status).toBe(201);
+      await expect(AuthService.comparePasswords(newUser.password, response.body.password)).resolves.toBeTruthy()
       expect(response.body).toEqual(
-        expect.objectContaining(newUser)
+        expect.objectContaining(
+          {
+            ...newUser, 
+            ...{password: expect.any(String)}
+          }
+        )
       );
-
-
+  
     });
 
-    it('should return 422 when there is a validation error', async () => {
-
-      const newUser = {
-        name: 1,
-        email: 'jhon@gmail.com',
-        password: '1234'
-      };
-
-      const response = await global.testRequest.post(
-        '/users'
-      ).send(newUser);
-
-      expect(response.status).toBe(422);
-      expect(response.body).toEqual(
-
-        {
-          code: 422,
-          error: 'user validation failed: name: Path `name` (`1`) is shorter than the minimum allowed length (4).'
-        }
-      );
-
-    });
-
-    it('Should return 400 when there is a validation error', async () => {
+    it('Should return 422 when there is a validation error', async () => {
       const newUser = {
         email: 'jhon@gmail.com',
         password: '1234'
@@ -61,7 +47,7 @@ describe('User functional tests', () => {
       expect(response.status).toBe(422);
       expect(response.body).toEqual({
         code: 422,
-        error: 'user validation failed: name: Path `name` is required.'
+        error: 'User validation failed: name: Path `name` is required.'
       });
 
     });
@@ -89,5 +75,20 @@ describe('User functional tests', () => {
 
     });
 
+    it('Should return 409 when the email already exists', async () => {
+      const newUser = {
+        name: 'John Doe',
+        email: 'john@mail.com',
+        password: '1234',
+      };
+      await global.testRequest.post('/users').send(newUser);
+      const response = await global.testRequest.post('/users').send(newUser);
+
+      expect(response.status).toBe(409);
+      expect(response.body).toEqual({
+        code: 409,
+        error: 'User validation failed: email: already exists in the database.',
+      });
+    });
   });
 })
