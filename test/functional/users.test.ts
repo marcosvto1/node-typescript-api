@@ -1,6 +1,7 @@
 
 import { User } from './../../src/models/user';
 import AuthService from '@src/services/auth';
+import { exec } from 'child_process';
 
 
 describe('User functional tests', () => {
@@ -111,6 +112,35 @@ describe('User functional tests', () => {
         expect.objectContaining({token: expect.any(String)})
       );
     });
+
+    it.only('should return UNAUTHORIZED if the user with the given email is not found', async () => {
+      const response = await global.testRequest
+        .post('/users/authenticate')
+        .send({
+          email: 'some-email@mail.com',
+          password: '1234'
+        });
+
+      expect(response.status).toBe(401);
+    });
+
+    it.only('should return ANAUTHORIZED if the o user is found but the password does not match', async () => {
+      const newUser = {
+        name: 'Jhon Doe',
+        email: 'jhon@mail.com',
+        password: '1234'
+      };
+
+      await new User(newUser).save();
+
+      const response = await global.testRequest
+      .post('/users/authenticate')
+      .send({ email: newUser.email, password: 'different password' });
+
+      expect(response.status).toBe(401);
+
+    });
+
   });
 
 })
