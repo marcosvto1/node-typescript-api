@@ -6,14 +6,12 @@ import { Forecast, ForecastProcessingInternalError } from './../forecast';
 jest.mock('@src/clients/stormGlass');
 
 describe('Forecast Service', () => {
-
   const mockedStormGlassService = new StormGlass() as jest.Mocked<StormGlass>;
 
   it('Should return the forecast for a list of beachs', async () => {
-    mockedStormGlassService.fetchPoints    
-    .mockResolvedValue(
+    mockedStormGlassService.fetchPoints.mockResolvedValue(
       stormGlassNormalizedWeather3HoursFixture
-      );
+    );
 
     const beaches: Beach[] = [
       {
@@ -112,7 +110,7 @@ describe('Forecast Service', () => {
     ];
 
     mockedStormGlassService.fetchPoints.mockRejectedValue(
-     'Error fetching data'
+      'Error fetching data'
     );
 
     const forecast = new Forecast(mockedStormGlassService);
@@ -120,6 +118,5 @@ describe('Forecast Service', () => {
     await expect(forecast.processForecastForBeaches(beaches)).rejects.toThrow(
       ForecastProcessingInternalError
     );
-
   });
 });

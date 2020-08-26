@@ -1,33 +1,32 @@
-import AuthService from "@src/services/auth";
-import { authMiddleware } from "@src/middlewares/auth";
+import AuthService from '@src/services/auth';
+import { authMiddleware } from '@src/middlewares/auth';
 
-describe('AuthMiddleware', () =>  {
+describe('AuthMiddleware', () => {
   it('should verify a JWT token and call the next middlwares', async () => {
-    const jwtToken = AuthService.generateToken({data: 'fake'});
+    const jwtToken = AuthService.generateToken({ data: 'fake' });
     const reqFake = {
       headers: {
-        'x-access-token': jwtToken
+        'x-access-token': jwtToken,
       },
     };
 
-    const resFake = {}
+    const resFake = {};
     const nextFake = jest.fn();
     authMiddleware(reqFake, resFake, nextFake);
-    expect(nextFake).toHaveBeenCalled()
-
+    expect(nextFake).toHaveBeenCalled();
   });
 
   it('should return UNAUTHORIZED if there is a problem on the token verifcation', () => {
     const reqFake = {
       headers: {
-        'x-access-token': 'invalid_token'
+        'x-access-token': 'invalid_token',
       },
     };
 
     const sendMock = jest.fn();
     const resFake = {
       status: jest.fn(() => ({
-        send: sendMock
+        send: sendMock,
       })),
     };
 
@@ -36,9 +35,8 @@ describe('AuthMiddleware', () =>  {
     expect(resFake.status).toHaveBeenCalledWith(401);
     expect(sendMock).toHaveBeenCalledWith({
       code: 401,
-      error: 'jwt malformed'
+      error: 'jwt malformed',
     });
-
   });
 
   it('should return UNAUTHORIZED middleware if theres no token', () => {
@@ -49,7 +47,7 @@ describe('AuthMiddleware', () =>  {
     const sendMock = jest.fn();
     const resFake = {
       status: jest.fn(() => ({
-        send: sendMock
+        send: sendMock,
       })),
     };
 
@@ -58,8 +56,7 @@ describe('AuthMiddleware', () =>  {
     expect(resFake.status).toHaveBeenCalledWith(401);
     expect(sendMock).toHaveBeenCalledWith({
       code: 401,
-      error: 'jwt must be provided'
+      error: 'jwt must be provided',
     });
-
   });
-})
+});
