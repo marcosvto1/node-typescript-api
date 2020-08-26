@@ -16,7 +16,7 @@ jobs:
     steps: 
       #baixar o codigo
     - uses: actions/checkout@v2
-    - run: get fetch --prune --unshallow
+    - run: git fetch --prune --unshallow
     
     # definir o node
     - name: Use Node.js ${{ matrix.node-version }}
