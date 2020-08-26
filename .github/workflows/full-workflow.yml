@@ -45,5 +45,6 @@ jobs:
     - name: Deployment
       if: github.ref == 'refs/heads/master'
       run: git remote add umbler ssh://git@kamino.deploy.umbler.com:9922/jv0lyr6e/myforecastsurf-com.git
+      run: git push umbler master
       env:
         CI: true

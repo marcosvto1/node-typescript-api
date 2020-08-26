@@ -5,3 +5,5 @@ docker run -p 27017:27017 -d mongo
 ssh-keygen -t rsa -C "desenvolvedor64@gmail.com"
 # copy private key to github
 # copy public key to umbler
+## att
+sempre dar chmod +x nos scripts antes
