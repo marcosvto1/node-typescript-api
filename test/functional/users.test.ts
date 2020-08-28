@@ -1,6 +1,5 @@
 import { User } from './../../src/models/user';
 import AuthService from '@src/services/auth';
-import { exec } from 'child_process';
 
 describe('User functional tests', () => {
   beforeEach(async () => {
@@ -128,6 +127,43 @@ describe('User functional tests', () => {
         .send({ email: newUser.email, password: 'different password' });
 
       expect(response.status).toBe(401);
+    });
+  });
+
+  describe('When getting user profile info', () => {
+    it('Should return the tokens owner profile information', async () => {
+      const newUser = {
+        name: 'Jhoe Doe',
+        email: 'jhon@mail.com',
+        password: '1234'
+      };
+
+      const user = await new User(newUser).save();
+      const token = AuthService.generateToken(user.toJSON());
+      const { body, status } = await global.testRequest
+        .get('/users/me')
+        .set({'x-access-token': token});
+
+      expect(status).toBe(200);
+      expect(body).toMatchObject(JSON.parse(JSON.stringify({user})));
+    });
+
+    it(`Should return Not Found, when the o user is not found`, async () => {
+      const newUser = {
+        name: 'Jhoe Doe',
+        email: 'jhon@mail.com',
+        password: '1234'
+      };
+      // create a new user but don't save it
+      const user = new User(newUser);
+      const token = AuthService.generateToken(user.toJSON());
+      const {body, status} = await global.testRequest
+        .get('/users/me')
+        .set({ 'x-access-token': token });
+
+      expect(status).toBe(404)
+      expect(body.message).toBe('User not found');
+      
     });
   });
 });
