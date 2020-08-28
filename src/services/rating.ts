@@ -69,19 +69,19 @@ export class Rating {
 
   getPositionFromLocation(coordinates: number): BeachPosition {
     if (coordinates >= 310 || (coordinates < 50 && coordinates >= 0)) {
-      BeachPosition.N;
+      return BeachPosition.N;
     }
 
     if (coordinates >= 50 && coordinates < 120) {
-      BeachPosition.E;
+      return BeachPosition.E;
     }
 
     if (coordinates >= 120 && coordinates < 220) {
-      BeachPosition.S
+      return BeachPosition.S
     }
     
-    if (coordinates >= 220 && coordinates < 300) {
-      BeachPosition.W;
+    if (coordinates >= 220 && coordinates < 310) {
+      return BeachPosition.W;
     }
 
     return BeachPosition.E;
