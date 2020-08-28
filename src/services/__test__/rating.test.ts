@@ -76,6 +76,32 @@ describe('Rating services', () => {
     });
   });
   
+  describe('Get positions based on points locations', () => {
+    it('should get the point based on a east location', () => {
+      const response = defaultRating.getPositionFromLocation(92);
+      expect(response).toBe(BeachPosition.E);
+    });
+
+    it('should get the point based on a north location', () => {
+      const response = defaultRating.getPositionFromLocation(360);
+      expect(response).toBe(BeachPosition.N);
+    });
+
+    it('should get the point based on a north location', () => {
+      const response = defaultRating.getPositionFromLocation(40);
+      expect(response).toBe(BeachPosition.N);
+    });
+
+    it('should get the point based on south location', () => {
+      const response = defaultRating.getPositionFromLocation(200);
+      expect(response).toBe(BeachPosition.S);
+    });
+
+    it('should get the point based on west location', () => {
+      const response = defaultRating.getPositionFromLocation(300);
+      expect(response).toBe(BeachPosition.W);
+    });
+  });
   
 
 });

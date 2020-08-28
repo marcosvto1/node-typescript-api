@@ -67,6 +67,26 @@ export class Rating {
     return 1;
   }
 
+  getPositionFromLocation(coordinates: number): BeachPosition {
+    if (coordinates >= 310 || (coordinates < 50 && coordinates >= 0)) {
+      BeachPosition.N;
+    }
+
+    if (coordinates >= 50 && coordinates < 120) {
+      BeachPosition.E;
+    }
+
+    if (coordinates >= 120 && coordinates < 220) {
+      BeachPosition.S
+    }
+    
+    if (coordinates >= 220 && coordinates < 300) {
+      BeachPosition.W;
+    }
+
+    return BeachPosition.E;
+  }
+
   private isWindOffShore(wavePosition: BeachPosition, windPosition: BeachPosition): boolean {
     return (
       (wavePosition == BeachPosition.N && windPosition == BeachPosition.S && this.beach.position == BeachPosition.N) ||
