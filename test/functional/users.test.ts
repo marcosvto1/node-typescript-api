@@ -162,8 +162,43 @@ describe('User functional tests', () => {
         .set({ 'x-access-token': token });
 
       expect(status).toBe(404)
-      expect(body.message).toBe('User not found');
+      expect(body.message).toBe('User not found!');
       
     });
+  });
+
+  describe('when user getting beaches ', () => {
+    it('Should return beachs', async () => {
+      const newUser = {
+        name: 'Jhoe Doe',
+        email: 'jhon@mail.com',
+        password: '1234'
+      };
+
+      const newBeach = {
+        lat: -33.792726,
+        lng: 151.289824,
+        name: 'Manly',
+        position: 'E',
+      };
+
+      const user = await new User(newUser).save();
+      const token = AuthService.generateToken(user.toJSON());
+
+      const responseCreateBeach = await global.testRequest
+        .post('/beaches')
+        .set({ 'x-access-token': token })
+        .send(newBeach);
+
+      expect(responseCreateBeach.status).toBe(201);
+      //expect(responseCreateBeach.body).toEqual(newBeach);
+
+      const responseUserBeachs = await global.testRequest
+      .get('/users/beaches')
+      .set({ 'x-access-token': token });
+
+      expect(responseUserBeachs.status).toBe(200);
+      expect(responseUserBeachs.body).toEqual([expect.objectContaining(newBeach)]);
+    })
   });
 });
