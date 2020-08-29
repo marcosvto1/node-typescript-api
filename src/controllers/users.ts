@@ -5,6 +5,7 @@ import { BaseController } from '@src/controllers';
 import AuthService from '@src/services/auth';
 import { authMiddleware } from '@src/middlewares/auth';
 import { Beach } from '@src/models/beach';
+import  logger from '@src/logger';
 
 @Controller('users')
 export class UsersController extends BaseController {
@@ -63,30 +64,5 @@ export class UsersController extends BaseController {
 
     return res.send({ user });
   }
-
-  @Get('beaches')
-  @Middleware(authMiddleware)
-  public async beachs(req: Request, res: Response): Promise<Response> {
-    const email = req.decoded ? req.decoded.email : undefined;
-    const user = await User.findOne({email});
-    if (!user) {
-      return this.sendErrorResponse(res, { 
-        code: 404,
-        message: 'User not found!'
-      });
-    }
-
-    const beaches = await Beach.find({
-      user: req.decoded?.id,
-    });
-
-    if (!beaches) {
-      return this.sendErrorResponse(res, {
-        code: 404,
-        message: 'Beachs not found for user'
-      });
-    }
-
-    return res.send(beaches);
-  }
+  
 }

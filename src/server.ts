@@ -2,6 +2,7 @@ import './util/module-alias';
 
 import { Server } from '@overnightjs/core';
 import bodyParser from 'body-parser';
+import * as http from 'http';
 import { Application } from 'express';
 import expressPino from 'express-pino-logger';
 import cors from 'cors';
@@ -17,8 +18,11 @@ import { UsersController } from '@src/controllers/users';
 
 import * as database from './database';
 import logger from '@src/logger';
+import { apiErrorValidator } from '@src/middlewares/api-error-validator';
 
 export class SetupServer extends Server {
+  private server?: http.Server;
+
   constructor(private port = 3000) {
     super();
   }
@@ -26,19 +30,23 @@ export class SetupServer extends Server {
   public async init(): Promise<void> {
     this.setupExpress();
     await this.docsSetup();
-    // this.setupControllers();
+    this.setupControllers();
     await this.databaseSetup();
+    //must be the last
+    this.setupErrorHandlers();
   }
 
   private setupExpress(): void {
     this.app.use(bodyParser.json());
-    this.app.use(expressPino({logger: logger}));
+    this.app.use(expressPino({logger}));
     this.app.use(cors({
       origin: '*'
     }));
-    this.setupControllers();
-
   } 
+
+  private setupErrorHandlers(): void {
+    this.app.use(apiErrorValidator);
+  }
 
   private setupControllers(): void {
     const forecastController = new ForecastController();
@@ -69,7 +77,7 @@ export class SetupServer extends Server {
 
   private async docsSetup(): Promise<void> {
     this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(apiSchema));
-    await new OpenApiValidator({
+     await new OpenApiValidator({
       apiSpec: apiSchema as OpenAPIV3.Document,
       validateRequests: true,
       validateResponses: true
