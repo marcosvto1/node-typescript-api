@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import AuthService from '@src/services/auth';
 import { authMiddleware } from '@src/middlewares/auth';
 

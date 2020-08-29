@@ -90,7 +90,7 @@ describe('Forecast Service', () => {
     const beachesWithRating = await forecast.processForecastForBeaches(beaches);
     console.log(beachesWithRating);
     expect(beachesWithRating).toEqual(expectedResponse);
-  })
+  });
 
   it('Should return the forecast for a list of beachs', async () => {
     mockedStormGlassService.fetchPoints.mockResolvedValue(

@@ -16,12 +16,14 @@ export default class ApiError {
   public static format(error: APIError): ApiErrorResponse {
     return {
       ...{
-      message: error.message,
-      code: error.code,
-      error: error.codeAsString ? error.codeAsString : httpStatusCodes.getStatusText(error.code),
+        message: error.message,
+        code: error.code,
+        error: error.codeAsString
+          ? error.codeAsString
+          : httpStatusCodes.getStatusText(error.code),
       },
-      ... (error.documentation && {documentation: error.documentation}),
-      ... (error.description && {description: error.description})
-    }
+      ...(error.documentation && { documentation: error.documentation }),
+      ...(error.description && { description: error.description }),
+    };
   }
 }

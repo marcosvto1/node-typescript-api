@@ -7,7 +7,7 @@ describe('Rating services', () => {
     lng: 151.289824,
     name: 'Manly',
     position: GeoPosition.E,
-    user: 'some-user'
+    user: 'some-user',
   };
 
   const defaultRating = new Rating(defaultBeach);
@@ -106,17 +106,26 @@ describe('Rating services', () => {
 
   describe('Get rating base o wind and wave positions', () => {
     it('should get rating 1 for a beach with onshore winds', () => {
-      const rating = defaultRating.getRatingOnWindWavePositions(GeoPosition.E, GeoPosition.E);
+      const rating = defaultRating.getRatingOnWindWavePositions(
+        GeoPosition.E,
+        GeoPosition.E
+      );
       expect(rating).toBe(1);
-    })
+    });
 
     it('should get rating 3 for a beach with cross winds ', () => {
-      const rating = defaultRating.getRatingOnWindWavePositions(GeoPosition.E, GeoPosition.S);
+      const rating = defaultRating.getRatingOnWindWavePositions(
+        GeoPosition.E,
+        GeoPosition.S
+      );
       expect(rating).toBe(3);
     });
     // Vento vem ao contrário da ondulação
     it('should get rating 5 for a beach with offshore winds ', () => {
-      const rating = defaultRating.getRatingOnWindWavePositions(GeoPosition.E, GeoPosition.W);
+      const rating = defaultRating.getRatingOnWindWavePositions(
+        GeoPosition.E,
+        GeoPosition.W
+      );
       expect(rating).toBe(5);
     });
   });
@@ -164,7 +173,7 @@ describe('Rating services', () => {
       expect(rating).toBe(5);
     });
   });
-  
+
   describe('Get positions based on points locations', () => {
     it('should get the point based on a east location', () => {
       const response = defaultRating.getPositionFromLocation(92);
@@ -191,6 +200,4 @@ describe('Rating services', () => {
       expect(response).toBe(GeoPosition.W);
     });
   });
-  
-
 });

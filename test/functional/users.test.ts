@@ -39,7 +39,7 @@ describe('User functional tests', () => {
       expect(response.status).toBe(400);
       expect(response.body).toEqual({
         code: 400,
-        error: "Bad Request",
+        error: 'Bad Request',
         message: 'User validation failed: name: Path `name` is required.',
       });
     });
@@ -60,7 +60,7 @@ describe('User functional tests', () => {
       expect(response.status).toBe(500);
       expect(response.body).toEqual({
         code: 500,
-        error: "Internal Server Error",
+        error: 'Internal Server Error',
         message: 'Something went wrong',
       });
     });
@@ -77,8 +77,9 @@ describe('User functional tests', () => {
       expect(response.status).toBe(409);
       expect(response.body).toEqual({
         code: 409,
-        error: "Conflict",
-        message: 'User validation failed: email: already exists in the database.',
+        error: 'Conflict',
+        message:
+          'User validation failed: email: already exists in the database.',
       });
     });
   });
@@ -135,41 +136,40 @@ describe('User functional tests', () => {
       const newUser = {
         name: 'Jhoe Doe',
         email: 'jhon@mail.com',
-        password: '1234'
+        password: '1234',
       };
 
       const user = await new User(newUser).save();
       const token = AuthService.generateToken(user.toJSON());
       const { body, status } = await global.testRequest
         .get('/users/me')
-        .set({'x-access-token': token});
+        .set({ 'x-access-token': token });
 
       expect(status).toBe(200);
-      expect(body).toMatchObject(JSON.parse(JSON.stringify({user})));
+      expect(body).toMatchObject(JSON.parse(JSON.stringify({ user })));
     });
 
     it(`Should return Not Found, when the o user is not found`, async () => {
       const newUser = {
         name: 'Jhoe Doe',
         email: 'jhon@mail.com',
-        password: '1234'
+        password: '1234',
       };
       // create a new user but don't save it
       const user = new User(newUser);
       const token = AuthService.generateToken(user.toJSON());
-      const {body, status} = await global.testRequest
+      const { body, status } = await global.testRequest
         .get('/users/me')
         .set({ 'x-access-token': token });
 
-      expect(status).toBe(404)
+      expect(status).toBe(404);
       expect(body.message).toBe('User not found!');
-      
     });
   });
 
   describe('when user getting beaches ', () => {
     it('Should return beachs', async () => {
-     /* const newUser = {
+      /* const newUser = {
         name: 'Jhoe Doe',
         email: 'jhon@mail.com',
         password: '1234'
@@ -199,6 +199,6 @@ describe('User functional tests', () => {
 
       //expect(responseUserBeachs.status).toBe(200);
       expect(responseUserBeachs.body).toEqual([expect.objectContaining(newBeach)]); */
-    })
+    });
   });
 });

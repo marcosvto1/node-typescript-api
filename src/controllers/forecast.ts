@@ -1,12 +1,17 @@
 import { BaseController } from '@src/controllers';
-import { Controller, Get, ClassMiddleware, Middleware } from '@overnightjs/core';
+import {
+  Controller,
+  Get,
+  ClassMiddleware,
+  Middleware,
+} from '@overnightjs/core';
 import { Request, Response } from 'express';
 import { Beach } from '../models/beach';
 import { Forecast } from './../services/forecast';
 import { authMiddleware } from '@src/middlewares/auth';
 import logger from '@src/logger';
 import rateLimit from 'express-rate-limit';
-import  ApiError from '@src/util/errors/api-error';
+import ApiError from '@src/util/errors/api-error';
 
 const forecast = new Forecast();
 
@@ -17,9 +22,14 @@ const rateLimiter = rateLimit({
     return req.ip;
   },
   handler(_, res: Response): void {
-    res.status(429).send(ApiError.format({code: 429, message: 'Too many request to the /forecast endpoint'}))
-  }
-})
+    res.status(429).send(
+      ApiError.format({
+        code: 429,
+        message: 'Too many request to the /forecast endpoint',
+      })
+    );
+  },
+});
 
 @Controller('forecast')
 @ClassMiddleware(authMiddleware)
@@ -38,7 +48,10 @@ export class ForecastController extends BaseController {
       res.status(200).send(forecastData);
     } catch (error) {
       logger.error(error);
-      this.sendErrorResponse(res, {code: 500, message: 'Something went wrong'})
+      this.sendErrorResponse(res, {
+        code: 500,
+        message: 'Something went wrong',
+      });
     }
   }
 }
