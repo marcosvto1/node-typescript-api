@@ -1,5 +1,5 @@
 import { ForecastPoint } from './../clients/stormGlass';
-import { BeachPosition } from './../models/beach';
+import { GeoPosition } from './../models/beach';
 import { Beach } from '@src/models/beach';
 import c from 'config';
 
@@ -38,7 +38,7 @@ export class Rating {
     return Math.round(finalRate);
   }
 
-  getRatingOnWindWavePositions(wavePosition: BeachPosition, windPosition: BeachPosition): number {
+  getRatingOnWindWavePositions(wavePosition: GeoPosition, windPosition: GeoPosition): number {
     if (wavePosition === windPosition) {
       return 1; 
     } else if (this.isWindOffShore(wavePosition, windPosition)) {
@@ -84,32 +84,32 @@ export class Rating {
     return 1;
   }
 
-  getPositionFromLocation(coordinates: number): BeachPosition {
+  getPositionFromLocation(coordinates: number): GeoPosition {
     if (coordinates >= 310 || (coordinates < 50 && coordinates >= 0)) {
-      return BeachPosition.N;
+      return GeoPosition.N;
     }
 
     if (coordinates >= 50 && coordinates < 120) {
-      return BeachPosition.E;
+      return GeoPosition.E;
     }
 
     if (coordinates >= 120 && coordinates < 220) {
-      return BeachPosition.S
+      return GeoPosition.S
     }
     
     if (coordinates >= 220 && coordinates < 310) {
-      return BeachPosition.W;
+      return GeoPosition.W;
     }
 
-    return BeachPosition.E;
+    return GeoPosition.E;
   }
 
-  private isWindOffShore(wavePosition: BeachPosition, windPosition: BeachPosition): boolean {
+  private isWindOffShore(wavePosition: GeoPosition, windPosition: GeoPosition): boolean {
     return (
-      (wavePosition == BeachPosition.N && windPosition == BeachPosition.S && this.beach.position == BeachPosition.N) ||
-      (wavePosition == BeachPosition.S && windPosition == BeachPosition.N && this.beach.position == BeachPosition.S) ||
-      (wavePosition == BeachPosition.E && windPosition == BeachPosition.W && this.beach.position == BeachPosition.E) ||
-      (wavePosition == BeachPosition.W && windPosition == BeachPosition.E && this.beach.position == BeachPosition.W) 
+      (wavePosition == GeoPosition.N && windPosition == GeoPosition.S && this.beach.position == GeoPosition.N) ||
+      (wavePosition == GeoPosition.S && windPosition == GeoPosition.N && this.beach.position == GeoPosition.S) ||
+      (wavePosition == GeoPosition.E && windPosition == GeoPosition.W && this.beach.position == GeoPosition.E) ||
+      (wavePosition == GeoPosition.W && windPosition == GeoPosition.E && this.beach.position == GeoPosition.W) 
     );
   }
 }
